@@ -1,86 +1,104 @@
 #+TITLE: My Emacs Configuration
 #+AUTHOR: Imran Khan
-  
+
 * General Settings
-  
+
 ** Start screen
-   
-   #+BEGIN_SRC emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
    (setq inhibit-startup-screen +1)
    ;; open emacs in full screen
    (toggle-frame-fullscreen)
-   #+END_SRC
-      
+#+END_SRC
+
 ** Reduce clutter
-   
-   #+BEGIN_SRC emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
    (when (window-system)
        (tool-bar-mode -1)
        (scroll-bar-mode -1)
        (menu-bar-mode -1))
    ;; turn beep off
    (setq visible-bell nil)
-   #+END_SRC
-   
+#+END_SRC
+
 ** Enable copy and pasting from clipboard
-   
-   #+BEGIN_SRC emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
    (setq x-select-enable-clipboard t)
-   #+END_SRC
+#+END_SRC
 
 ** Use (Y/N) instead of (Yes/No)
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    (defalias 'yes-or-no-p 'y-or-n-p)
-   #+END_SRC
- 
+#+END_SRC
+
 ** Manage backup files 
-   
-   #+BEGIN_SRC emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
    (setq backup-directory-alist `(("." . "~/.emacs-backup")))
    (setq backup-by-copying t) 
    (setq delete-old-versions t
      kept-new-versions 6
      kept-old-versions 2
      version-control t)
-   #+END_SRC
- 
+#+END_SRC
+
 ** Copy environment variables from shell
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    (when (memq window-system '(mac ns))
      (exec-path-from-shell-initialize))
-   #+END_SRC
+#+END_SRC
+
+** Highlight current line
+
+#+BEGIN_SRC emacs-lisp
+     (global-hl-line-mode +1) 
+     (set-face-background hl-line-face "#656766")  
+#+END_SRC
+
+** Line wrapping
+
+#+BEGIN_SRC emacs-lisp
+   (global-visual-line-mode 1)
+   ;; Disable Fringe
+   (set-fringe-mode '(0 . 0))
+#+END_SRC
+
+** Indentation
+
+#+BEGIN_SRC emacs-lisp
+   (setq standard-indent 2)
+#+END_SRC
 
 * Looks
-  
+
 ** Color theme
-   
-   #+BEGIN_SRC emacs-lisp
-   (load-theme 'solarized-dark t)   
-   #+END_SRC
-   
+
+#+BEGIN_SRC emacs-lisp
+   (load-theme 'sanityinc-tomorrow-night t)
+   ;; smart-mode-line
+   (setq sml/theme 'dark)
+   (sml/setup)
+#+END_SRC
+
 ** Font 
-   
-   #+BEGIN_SRC emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
    (set-face-attribute 'default nil
 			 :family "consolas"
-			 :height 160
+			 :height 150
 			 :weight 'normal
 			 :width 'normal)
-   #+END_SRC
-   
-** Indentation
-   
-   #+BEGIN_SRC emacs-lisp
-   (setq standard-indent 2)
-   #+END_SRC
-   
+#+END_SRC
+
 * Navigation
 
 ** Ido mode
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    (setq ido-enable-flex-matching t)
    (ido-mode +1)
    (require 'ido-vertical-mode)
@@ -88,27 +106,27 @@
    (ido-everywhere t)
    ;;disable auto-merge for ido-mode
    (setq ido-atuo-merge-work-directories-length -1) 
-   #+END_SRC
+#+END_SRC
 
 ** Projectile
-   
-   #+BEGIN_SRC emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
    (projectile-global-mode)
    (setq projectile-enable-caching t)
    (setq projectile-require-project-root nil)
    (setq projectile-switch-project-action 'projectile-dired)
    (setq projectile-completion-system 'grizzl)
-   #+END_SRC
-   
+#+END_SRC
+
 ** Navigate easily between windows
-   
-   #+BEGIN_SRC emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
    (windmove-default-keybindings)   
-   #+END_SRC
-     
+#+END_SRC
+
 * Auto Complete
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   ;; load snippets
   (yas-global-mode 1)
   (require 'auto-complete-config)
@@ -124,89 +142,144 @@
   (add-to-list 'ac-modes 'enh-ruby-mode)
   ;; enable it all buffers
   (add-hook 'after-init-hook 'global-auto-complete-mode)
-  #+END_SRC
+#+END_SRC
 
 * Global key bindings
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   ;; magit 
   (global-set-key "\C-cg" 'magit-status)
+
   ;; multiple-cursors
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
   ;; expand-region
-  (global-set-key (kbd "M-2") #'er/expand-region)
-  #+END_SRC
+  (global-set-key (kbd "M-2") 'er/expand-region)
+#+END_SRC
 
 * Programming
 
 ** Magit
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    ;; prevent magit from opening another emacs-client
    (set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD/bin/emacsclient")
-   #+END_SRC
+#+END_SRC
 
 ** Ruby
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    (add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
    (add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
    (add-to-list 'auto-mode-alist '("\\Gemfile$" . enh-ruby-mode))
-   #+END_SRC
-   
+#+END_SRC
+
+Use rvm's default ruby for the current Emacs session
+#+BEGIN_SRC emacs-lisp
+   (rvm-use-default)   
+#+END_SRC
+
+Ripper Tags generation suing projectile. 
+#+BEGIN_SRC emacs-lisp
+   (setq projectile-tags-command "ripper-tags -R -f TAGS")
+#+END_SRC
+
 ** Javascript
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . js2-mode))
-   #+END_SRC
+#+END_SRC
 
 ** JSON
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
     (add-to-list 'auto-mode-alist '("\\.json\\'\\|\\.jshintrc\\'" . json-mode))
-    #+END_SRC
+#+END_SRC
+
+** Match Parens
+
+#+BEGIN_SRC emacs-lisp
+   (show-paren-mode 1)
+#+END_SRC
 
 ** ANSI Colors
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    (require 'ansi-color)
    (defun colorize-compilation-buffer ()
      (toggle-read-only)
      (ansi-color-apply-on-region (point-min) (point-max))
      (toggle-read-only))
    (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
-   #+END_SRC
+#+END_SRC
+
+** Smartparens
+
+It automatically inserts closing parenthesis, tags, end’s depending on major-mode
+
+#+BEGIN_SRC emacs-lisp
+      (smartparens-global-mode)    
+#+END_SRC
 
 * Org mode
-  
+
+** General
+
+#+BEGIN_SRC emacs-lisp
+   ;; Fix Org mode title face
+   (set-face-attribute 'default nil :font "consolas")
+   (set-face-attribute 'fixed-pitch nil :font "consolas")
+   (set-face-attribute 'variable-pitch nil :font "consolas")
+
+   ;; org-indent-mode hook
+   (add-hook 'org-mode-hook
+          (lambda ()
+            (org-indent-mode t))
+          t)
+#+END_SRC
+
+** Capture Notes
+
+#+BEGIN_SRC emacs-lisp
+;;capture notes
+(setq org-default-notes-file "~/Dropbox/org_files/daily_tasks.org")
+(define-key global-map "\C-cc" 'org-capture)
+;;
+#+END_SRC
+
 ** Spell check
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
    (setq ispell-program-name "/usr/local/bin/aspell")
    (add-hook 'org-mode-hook 'turn-on-flyspell)
-   #+END_SRC
-   
+#+END_SRC
+
 ** LaTeX 
 
-   #+BEGIN_SRC emacs-lisp
-   (require 'ox-latex)
-   (add-to-list 'org-latex-packages-alist '("" "minted"))
-   (setq org-latex-listings 'minted)
-   ;; pdf export
-   (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+     (require 'ox-latex)
+     (add-to-list 'org-latex-packages-alist '("" "minted"))
+     (setq org-latex-listings 'minted)
+     ;; pdf export
+     (setq org-latex-pdf-process
+          '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+            "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+            "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+END_SRC
 
 ** Org-Babel
-    
-   #+BEGIN_SRC emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
    ;; prettify source blocks
    (setq org-src-fontify-natively t)
-   #+END_SRC
+#+END_SRC
 
 
+** Org-bullets
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END
