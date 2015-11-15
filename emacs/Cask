@@ -18,7 +18,6 @@
 (depends-on "latex-preview-pane")
 (depends-on "magit")
 (depends-on "multiple-cursors")
-(depends-on "nyan-mode")
 (depends-on "org-bullets")
 (depends-on "org-tree-slide")
 (depends-on "pallet")

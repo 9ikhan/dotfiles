@@ -52,13 +52,6 @@
      (exec-path-from-shell-initialize))
 #+END_SRC
 
-** Highlight current line
-
-#+BEGIN_SRC emacs-lisp
-     (global-hl-line-mode +1) 
-     (set-face-background hl-line-face "#656766")  
-#+END_SRC
-
 ** Line wrapping
 
 #+BEGIN_SRC emacs-lisp
@@ -78,9 +71,11 @@
 ** Color theme
 
 #+BEGIN_SRC emacs-lisp
-   (load-theme 'sanityinc-tomorrow-night t)
+   ;; load theme only in GUI
+   (if window-system (load-theme 'sanityinc-tomorrow-night t))
    ;; smart-mode-line
    (setq sml/theme 'dark)
+   (setq sml/no-confirm-load-theme t)
    (sml/setup)
 #+END_SRC
 
@@ -92,6 +87,13 @@
 			 :height 150
 			 :weight 'normal
 			 :width 'normal)
+#+END_SRC
+
+** Highlight current line
+
+#+BEGIN_SRC emacs-lisp
+     (global-hl-line-mode +1) 
+     (set-face-background hl-line-face "#656766")  
 #+END_SRC
 
 * Navigation
@@ -182,11 +184,6 @@ Use rvm's default ruby for the current Emacs session
    (rvm-use-default)   
 #+END_SRC
 
-Ripper Tags generation suing projectile. 
-#+BEGIN_SRC emacs-lisp
-   (setq projectile-tags-command "ripper-tags -R -f TAGS")
-#+END_SRC
-
 ** Javascript
 
 #+BEGIN_SRC emacs-lisp
@@ -247,7 +244,6 @@ It automatically inserts closing parenthesis, tags, end’s depending on major-m
 ;;capture notes
 (setq org-default-notes-file "~/Dropbox/org_files/daily_tasks.org")
 (define-key global-map "\C-cc" 'org-capture)
-;;
 #+END_SRC
 
 ** Spell check
@@ -277,9 +273,9 @@ It automatically inserts closing parenthesis, tags, end’s depending on major-m
    (setq org-src-fontify-natively t)
 #+END_SRC
 
-
 ** Org-bullets
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-#+END
+#+END_SRC
+
