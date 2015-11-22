@@ -72,7 +72,7 @@
 
 #+BEGIN_SRC emacs-lisp
    ;; load theme only in GUI
-   (if window-system (load-theme 'sanityinc-tomorrow-night t))
+   (when window-system (load-theme 'sanityinc-tomorrow-night t))
    ;; smart-mode-line
    (setq sml/theme 'dark)
    (setq sml/no-confirm-load-theme t)
@@ -92,8 +92,8 @@
 ** Highlight current line
 
 #+BEGIN_SRC emacs-lisp
-     (global-hl-line-mode +1) 
-     (set-face-background hl-line-face "#656766")  
+     (when window-system (global-hl-line-mode +1) 
+       (set-face-background hl-line-face "#656766"))  
 #+END_SRC
 
 * Navigation
@@ -236,6 +236,9 @@ It automatically inserts closing parenthesis, tags, end’s depending on major-m
           (lambda ()
             (org-indent-mode t))
           t)
+
+  ;; Use "⤵" instead of "..."
+  (setq org-ellipsis "⤵")
 #+END_SRC
 
 ** Capture Notes
