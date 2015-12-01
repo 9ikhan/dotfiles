@@ -241,12 +241,30 @@ It automatically inserts closing parenthesis, tags, end’s depending on major-m
   (setq org-ellipsis "⤵")
 #+END_SRC
 
-** Capture Notes
-
+Set colors for priorities
 #+BEGIN_SRC emacs-lisp
-;;capture notes
-(setq org-default-notes-file "~/Dropbox/org_files/daily_tasks.org")
+(setq org-priority-faces '((?A . (:foreground "#F0DFAF" :weight bold))
+                           (?B . (:foreground "LightSteelBlue"))
+                           (?C . (:foreground "OliveDrab"))))
+#+END_SRC
+
+Log time when a task is closed
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done 'time)
+#+END_SRC
+
+** Capture Notes 
+#+BEGIN_SRC emacs-lisp
+(setq org-capture-templates
+      '(("t" "todo" entry (file+headline "~/Dropbox/org_files/daily_tasks.org" "Tasks")
+         "* TODO %?")))
 (define-key global-map "\C-cc" 'org-capture)
+#+END_SRC
+
+** Agenda
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c a") 'org-agenda)
+(setq org-agenda-files (quote ("~/Dropbox/org_files/daily_tasks.org")))
 #+END_SRC
 
 ** Spell check
@@ -281,4 +299,7 @@ It automatically inserts closing parenthesis, tags, end’s depending on major-m
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC
+
+
+
 
